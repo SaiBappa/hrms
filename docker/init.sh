@@ -24,6 +24,12 @@ bench set-redis-socketio-host redis://redis:6379
 sed -i '/redis/d' ./Procfile
 sed -i '/watch/d' ./Procfile
 
+# Listen on all interfaces so the published port 8000 reaches the dev server
+sed -i 's/^web: bench serve /web: bench serve --host 0.0.0.0 /' ./Procfile
+
+# The image's MariaDB 11.x client requires TLS by default; the mariadb:10.8 server has none
+printf "[client]\nskip-ssl\n" > ~/.my.cnf
+
 bench get-app erpnext
 bench get-app hrms
 
